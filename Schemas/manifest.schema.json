@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satella.dev/schemas/1.0.0/manifest.schema.json",
+  "title": "Satella Avatar Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "schemaVersion", "id", "name", "canvas", "model", "rig"],
+  "properties": {
+    "format": {
+      "const": "satella.avatar"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{1,63}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 32
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 128
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024
+    },
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 8192 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 8192 }
+      }
+    },
+    "model": { "type": "string", "minLength": 1 },
+    "rig": { "type": "string", "minLength": 1 },
+    "physics": { "type": ["string", "null"] },
+    "defaultExpression": { "type": ["string", "null"] },
+    "expressions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "file"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "file": { "type": "string" }
+        }
+      }
+    },
+    "animations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "file"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "file": { "type": "string" },
+          "autoPlay": { "type": "boolean" }
+        }
+      }
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "file"],
+        "properties": {
+          "id": { "type": "string" },
+          "file": { "type": "string" }
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "faceTracking": { "type": "boolean" },
+        "lipSync": { "type": "boolean" },
+        "physics": { "type": "boolean" },
+        "breastPhysics": { "type": "boolean" },
+        "effects": { "type": "boolean" },
+        "concealedEyes": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satella.dev/schemas/1.0.0/animation.schema.json",
+  "title": "Satella Parameter Animation Clip",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "duration", "tracks"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string" },
+    "duration": { "type": "number", "exclusiveMinimum": 0 },
+    "loop": { "type": "boolean" },
+    "fadeInSeconds": { "type": "number", "minimum": 0 },
+    "fadeOutSeconds": { "type": "number", "minimum": 0 },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["parameter", "keyframes"],
+        "properties": {
+          "parameter": { "type": "string" },
+          "blend": { "type": "string", "enum": ["add", "overwrite"] },
+          "interpolation": { "type": "string", "enum": ["linear", "smooth", "stepped"] },
+          "keyframes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["time", "value"],
+              "properties": {
+                "time": { "type": "number", "minimum": 0 },
+                "value": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

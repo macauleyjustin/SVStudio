@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satella.dev/schemas/1.0.0/physics.schema.json",
+  "title": "Satella Physics Specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fixedTimestep", "groups"],
+  "properties": {
+    "fixedTimestep": { "type": "number", "exclusiveMinimum": 0, "maximum": 0.1 },
+    "gravity": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "wind": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "inputs", "outputs"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string" },
+          "category": { "type": "string", "enum": ["hair", "clothing", "breast", "accessory", "custom"] },
+          "preset": { "type": "string", "enum": ["light_hair", "heavy_fabric", "soft_body", "accessory", "custom"] },
+          "type": { "type": "string", "enum": ["pendulum", "spring2d"] },
+          "stiffness": { "type": "number", "exclusiveMinimum": 0 },
+          "damping": { "type": "number", "minimum": 0 },
+          "inertia": { "type": "number", "minimum": 0 },
+          "gravityScale": { "type": "number" },
+          "windWeight": { "type": "number" },
+          "maxOutput": { "type": "number", "exclusiveMinimum": 0 },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["length", "mass", "stiffness", "damping"],
+              "properties": {
+                "length": { "type": "number", "exclusiveMinimum": 0 },
+                "mass": { "type": "number", "exclusiveMinimum": 0 },
+                "stiffness": { "type": "number", "exclusiveMinimum": 0 },
+                "damping": { "type": "number", "minimum": 0 }
+              }
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["parameter", "weight", "kind"],
+              "properties": {
+                "parameter": { "type": "string" },
+                "weight": { "type": "number" },
+                "velocityWeight": { "type": "number" },
+                "kind": { "type": "string", "enum": ["x", "y", "angle"] },
+                "reflect": { "type": "boolean" }
+              }
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["parameter", "scale", "kind"],
+              "properties": {
+                "parameter": { "type": "string" },
+                "nodeIndex": { "type": "integer", "minimum": 0 },
+                "scale": { "type": "number" },
+                "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+                "kind": { "type": "string", "enum": ["x", "y", "angle"] },
+                "reflect": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

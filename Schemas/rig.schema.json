@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://satella.dev/schemas/1.0.0/rig.schema.json",
+  "title": "Satella Rig Definition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["parameters", "deformers"],
+  "properties": {
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "min", "default", "max"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string" },
+          "group": { "type": "string" },
+          "min": { "type": "number" },
+          "default": { "type": "number" },
+          "max": { "type": "number" },
+          "repeat": { "type": "boolean" }
+        }
+      }
+    },
+    "deformers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "parent": { "type": ["string", "null"] },
+          "type": { "type": "string", "enum": ["rotation", "warp"] },
+          "pivot": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": "number" }
+          },
+          "bounds": {
+            "type": "object",
+            "required": ["x", "y", "width", "height"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "width": { "type": "number", "exclusiveMinimum": 0 },
+              "height": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          },
+          "rows": { "type": "integer", "minimum": 1, "maximum": 32 },
+          "cols": { "type": "integer", "minimum": 1, "maximum": 32 },
+          "axes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["parameter", "keys"],
+              "properties": {
+                "parameter": { "type": "string" },
+                "keys": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": { "type": "number" }
+                }
+              }
+            }
+          },
+          "keyforms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "angleDeg": { "type": "number" },
+                "translate": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+                "scale": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+                "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+                "gridOffsets": {
+                  "type": "array",
+                  "items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "meshBindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["meshId", "axes", "keyforms"],
+        "properties": {
+          "meshId": { "type": "string" },
+          "axes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["parameter", "keys"],
+              "properties": {
+                "parameter": { "type": "string" },
+                "keys": { "type": "array", "minItems": 1, "items": { "type": "number" } }
+              }
+            }
+          },
+          "keyforms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+                "drawOrderOffset": { "type": "number" },
+                "translate": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+                "scale": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+                "pivot": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+                "vertexDeltas": {
+                  "type": "array",
+                  "items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
