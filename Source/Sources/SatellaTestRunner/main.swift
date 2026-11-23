@@ -330,6 +330,42 @@ do {
         assertTrue(abs(testRig.paramValues["ParamAntennaSway"] ?? 0.0) > 0.15, "TestAvatar drag failed to sway antenna via avatar-defined dragReactions")
         assertTrue(testRig.paramValues["ParamSkirtLift"] == nil, "TestAvatar must not synthesize skirt lift parameter")
         print("  [PASS] perAvatarDragAndPhysicsIsolation")
+
+        // 12. LipSyncProcessor DC rejection, multi-channel peak RMS, noise gate & Hybrid rig routing
+        let dsp = LipSyncProcessor(noiseFloorRMS: 0.010, gainScale: 1.6)
+        // Constant DC offset (0.25) across 480 frames should settle near 0 after HPF without false mouth opening
+        let dcBuf = [Double](repeating: 0.25, count: 960)
+        for _ in 0..<8 {
+            _ = dsp.processChannels([dcBuf], sampleRate: 48000.0, dt: 0.02)
+        }
+        let dcRes = dsp.processChannels([dcBuf], sampleRate: 48000.0, dt: 0.02)
+        assertTrue(dcRes.mouthOpen < 0.01 && dcRes.rms < 0.005, "LipSync HPF failed to reject DC offset (rms=\(dcRes.rms), open=\(dcRes.mouthOpen))")
+
+        // Multi-channel mic where channel 0 is silent and channel 1 carries 400Hz speech tone (amp 0.06)
+        let silenceCh = [Double](repeating: 0.0, count: 960)
+        let speechCh = (0..<960).map { i in 0.06 * sin(2.0 * Double.pi * 400.0 * Double(i) / 48000.0) }
+        var peakMouth = 0.0
+        for _ in 0..<6 {
+            let res = dsp.processChannels([silenceCh, speechCh], sampleRate: 48000.0, dt: 0.02)
+            peakMouth = max(peakMouth, res.mouthOpen)
+        }
+        assertTrue(peakMouth > 0.45, "LipSync failed to detect multi-channel speech on non-zero channel (peak=\(peakMouth))")
+
+        // Return to silence and verify release gate closes mouth smoothly
+        var quietMouth = peakMouth
+        for _ in 0..<30 {
+            quietMouth = dsp.processChannels([silenceCh, silenceCh], sampleRate: 48000.0, dt: 0.02).mouthOpen
+        }
+        assertTrue(quietMouth < 0.02, "LipSync failed to close smoothly on silence (quietMouth=\(quietMouth))")
+
+        // Verify Hybrid RigController routing passes active mic audio to ParamMouthOpenY & VoiceVolume
+        testRig.inputMode = .hybrid
+        for _ in 0..<12 {
+            _ = testRig.step(dt: 1.0 / 60.0, tracking: TrackingSample(), micMouthOpen: 0.65, isMicActive: true)
+        }
+        let rigOpen = testRig.paramValues["ParamMouthOpenY"] ?? 0.0
+        assertTrue(rigOpen > 0.55, "RigController Hybrid mode failed to drive ParamMouthOpenY from mic (open=\(rigOpen))")
+        print(String(format: "  [PASS] lipSyncProcessorGateAndRouting (peakMouth=%.2f, settled=%.3f, rigOpen=%.2f)", peakMouth, quietMouth, rigOpen))
     }
 }
 

@@ -70,7 +70,7 @@ public final class AppController: FrameSnapshotProvider {
     public var handSmoothing: Double = 0.36
     public var autoExpressionTracking: Bool = true
     public var lipSyncGain: Double = 1.6
-    public var lipSyncThreshold: Double = 0.032
+    public var lipSyncThreshold: Double = 0.010
 
     // Rigging / Physics / Drag / Visual FX
     public var activeExpressionId: String? = nil
@@ -579,6 +579,9 @@ public final class AppController: FrameSnapshotProvider {
 
     public func setMicLipSyncEnabled(_ enabled: Bool, persist: Bool = true) {
         micLipSyncEnabled = enabled
+        if enabled {
+            refreshDevices()
+        }
         lipSync.configure(noiseFloor: lipSyncThreshold, gain: lipSyncGain)
         if enabled {
             lipSync.start(deviceUID: selectedMicID)
@@ -593,12 +596,15 @@ public final class AppController: FrameSnapshotProvider {
         selectedMicID = id
         preferencesStore.updateGlobal { $0.selectedMicID = id }
         if micLipSyncEnabled {
+            lipSync.configure(noiseFloor: lipSyncThreshold, gain: lipSyncGain)
             lipSync.start(deviceUID: id)
+            lipSyncStatus = lipSync.readState().status
         }
     }
 
     public func calibrateMicNoiseFloor() {
         lipSyncThreshold = lipSync.calibrateNoiseFloor()
+        lipSync.configure(noiseFloor: lipSyncThreshold, gain: lipSyncGain)
         persistCurrentAvatarPreferences()
     }
 

@@ -14,7 +14,7 @@
 
 | Artifact | Purpose | Size | Location |
 |---|---|---|---|
-| **SVStudio-1.0.0.dmg** | Signed & verified macOS Disk Image (`SVStudio.app` + `TestAvatar.sat`) | `2,854,313` bytes (`2.7 MB`) | [Download via Release `v1.0.0`](https://github.com/macauleyjustin/SVStudio/releases/download/v1.0.0/SVStudio-1.0.0.dmg) · [Repo File](./SVStudio-1.0.0.dmg) |
+| **SVStudio-1.0.0.dmg** | Signed & verified macOS Disk Image (`SVStudio.app` + `TestAvatar.sat`) | `2,887,969` bytes (`2.8 MB`) | [Download via Release `v1.0.0`](https://github.com/macauleyjustin/SVStudio/releases/download/v1.0.0/SVStudio-1.0.0.dmg) · [Repo File](./SVStudio-1.0.0.dmg) |
 | **SVStudio-1.0.0.dmg.sha256** | SHA-256 verification digest | `85` bytes | [Download Checksum](https://github.com/macauleyjustin/SVStudio/releases/download/v1.0.0/SVStudio-1.0.0.dmg.sha256) · [Repo File](./SVStudio-1.0.0.dmg.sha256) |
 | **GothicWitch.sat** | Standalone Satella avatar (not inside app/DMG) | `1.9 MB` | [Download Avatar](https://github.com/macauleyjustin/SVStudio/releases/download/v1.0.0/GothicWitch.sat) · [`SatellaAvatar/GothicWitch.sat`](./SatellaAvatar/GothicWitch.sat) |
 
@@ -22,9 +22,9 @@
 - **Architecture:** Apple Silicon (`arm64`, Mach-O thin binary)
 - **DMG SHA-256:**
   ```text
-  572fba6582d92302e6c5b0ebe831823f78d9e80999ff378a3950e8c220ae260a  SVStudio-1.0.0.dmg
+  1969ce557a873a78bf3d0ae682b481c27b5185077f79917820d0409b0ea91389  SVStudio-1.0.0.dmg
   ```
-- **DMG Verified CRC32:** `$7D6812A4` (`hdiutil verify`)
+- **DMG Verified CRC32:** `$5F3647B0` (`hdiutil verify`)
 
 ### Verify the Download & Signature Locally
 

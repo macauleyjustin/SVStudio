@@ -665,23 +665,45 @@ public struct SatellaMainView: View {
                 .toggleStyle(.switch)
 
                 if !controller.availableMics.isEmpty {
-                    Picker("Input", selection: Binding(
-                        get: { controller.selectedMicID ?? controller.availableMics.first?.id ?? "" },
-                        set: { controller.selectMicrophone($0) }
-                    )) {
-                        ForEach(controller.availableMics) { m in
-                            Text(m.name).tag(m.id)
+                    HStack(spacing: 6) {
+                        Picker("Input", selection: Binding(
+                            get: { controller.selectedMicID ?? controller.availableMics.first?.id ?? "" },
+                            set: { controller.selectMicrophone($0) }
+                        )) {
+                            ForEach(controller.availableMics) { m in
+                                Text(m.name).tag(m.id)
+                            }
                         }
+                        .font(.caption2)
+
+                        Button {
+                            controller.refreshDevices()
+                        } label: {
+                            Image(systemName: "arrow.clockwise")
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.mini)
+                        .help("Refresh Microphones")
                     }
-                    .font(.caption2)
+                } else {
+                    HStack {
+                        Text("No audio inputs detected")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Refresh") { controller.refreshDevices() }
+                            .font(.caption2)
+                            .buttonStyle(.bordered)
+                            .controlSize(.mini)
+                    }
                 }
 
                 HStack(spacing: 8) {
                     Text("Level")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
-                    ProgressView(value: min(1.0, controller.liveMicLevel * 8.0))
-                        .tint(.green)
+                    ProgressView(value: min(1.0, pow(max(0.0, controller.liveMicLevel * 12.0), 0.65)))
+                        .tint(controller.lipSyncStatus == .running ? .green : .orange)
                 }
 
                 labeledSlider(
@@ -694,7 +716,7 @@ public struct SatellaMainView: View {
                             controller.persistCurrentAvatarPreferences()
                         }
                     ),
-                    range: 0.4...4.0,
+                    range: 0.4...5.0,
                     format: "%.2fx"
                 )
 
@@ -708,7 +730,7 @@ public struct SatellaMainView: View {
                             controller.persistCurrentAvatarPreferences()
                         }
                     ),
-                    range: 0.005...0.15,
+                    range: 0.002...0.15,
                     format: "%.3f"
                 )
 

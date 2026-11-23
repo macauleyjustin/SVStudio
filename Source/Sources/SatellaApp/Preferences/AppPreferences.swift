@@ -81,7 +81,7 @@ public struct PerAvatarPreferences: Codable, Sendable, Equatable {
         handSmoothing: Double = 0.36,
         autoExpressionTracking: Bool = true,
         lipSyncGain: Double = 1.6,
-        lipSyncThreshold: Double = 0.032,
+        lipSyncThreshold: Double = 0.010,
         physicsEnabled: Bool = true,
         physicsIntensity: Double = 1.0,
         breastPhysicsLevel: BreastPhysicsLevel = .normal,
@@ -134,7 +134,7 @@ public struct PerAvatarPreferences: Codable, Sendable, Equatable {
         self.handSmoothing = try c.decodeIfPresent(Double.self, forKey: .handSmoothing) ?? 0.36
         self.autoExpressionTracking = try c.decodeIfPresent(Bool.self, forKey: .autoExpressionTracking) ?? true
         self.lipSyncGain = try c.decodeIfPresent(Double.self, forKey: .lipSyncGain) ?? 1.6
-        self.lipSyncThreshold = try c.decodeIfPresent(Double.self, forKey: .lipSyncThreshold) ?? 0.032
+        self.lipSyncThreshold = try c.decodeIfPresent(Double.self, forKey: .lipSyncThreshold) ?? 0.010
         self.physicsEnabled = try c.decodeIfPresent(Bool.self, forKey: .physicsEnabled) ?? true
         self.physicsIntensity = try c.decodeIfPresent(Double.self, forKey: .physicsIntensity) ?? 1.0
         self.breastPhysicsLevel = try c.decodeIfPresent(BreastPhysicsLevel.self, forKey: .breastPhysicsLevel) ?? .normal

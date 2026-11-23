@@ -612,7 +612,7 @@ public final class RigController {
         let smoothBrowLAngle = springBrowLAngle.step(target: hasLiveFace ? tracking.browLeftAngle : 0.0, smoothTime: 0.09, dt: dt)
         let smoothBrowRAngle = springBrowRAngle.step(target: hasLiveFace ? tracking.browRightAngle : 0.0, smoothTime: 0.09, dt: dt)
         let clampedMic = max(0.0, min(1.0, micMouthOpen))
-        let smoothMicOpen = springMicOpen.step(target: clampedMic, smoothTime: 0.042, dt: dt)
+        let smoothMicOpen = springMicOpen.step(target: clampedMic, smoothTime: 0.022, dt: dt)
 
         // Lively organic living idle sway so character always feels alive even at rest
         var idleYaw = 0.0, idlePitch = 0.0, idleRoll = 0.0
@@ -782,10 +782,10 @@ public final class RigController {
             resolvedMouthOpen = smoothMicOpen
         case .hybrid:
             if isMicActive {
-                if smoothMicOpen > 0.04 {
-                    resolvedMouthOpen = max(smoothMicOpen, smoothFaceMouthOpen * 0.40)
+                if smoothMicOpen > 0.015 {
+                    resolvedMouthOpen = max(smoothMicOpen, smoothFaceMouthOpen * 0.50)
                 } else {
-                    resolvedMouthOpen = smoothFaceMouthOpen > 0.28 ? (smoothFaceMouthOpen - 0.14) : 0.0
+                    resolvedMouthOpen = smoothFaceMouthOpen > 0.24 ? (smoothFaceMouthOpen - 0.12) : 0.0
                 }
             } else {
                 resolvedMouthOpen = hasLiveFace ? smoothFaceMouthOpen : 0.0
